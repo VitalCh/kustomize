@@ -283,6 +283,16 @@ func (p *HelmChartInflationGeneratorPlugin) templateCommand() []string {
 	if p.IncludeCRDs {
 		args = append(args, "--include-crds")
 	}
+	if len(p.IncludeFlags) != 0 {
+		// add each flag as specified, verify flag has prefix '--'
+		for _, flag := range p.IncludeFlags {
+			if strings.HasPrefix(flag, "--") {
+				args = append(args, flag)
+			} else {
+				fmt.Println("WARNING: Flag to include expected prefix \"--\" actual value " + flag)
+			}
+		}
+	}
 	return args
 }
 

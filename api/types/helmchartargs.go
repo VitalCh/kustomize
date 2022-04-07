@@ -72,6 +72,9 @@ type HelmChart struct {
 	// IncludeCRDs specifies if Helm should also generate CustomResourceDefinitions.
 	// Defaults to 'false'.
 	IncludeCRDs bool `json:"includeCRDs,omitempty" yaml:"includeCRDs,omitempty"` // nolint: tagliatelle
+
+	// IncludeFlags add specified flags for Helm template command.
+	IncludeFlags []string `json:"includeFlags,omitempty" yaml:"includeFlags,omitempty"`
 }
 
 // HelmChartArgs contains arguments to helm.

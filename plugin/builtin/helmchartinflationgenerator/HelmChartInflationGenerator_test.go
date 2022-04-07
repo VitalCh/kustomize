@@ -551,3 +551,32 @@ valuesInline:
 `)
 	th.AssertActualEqualsExpected(rm, "")
 }
+
+func TestHelmChartInflationGeneratorValidateIncludeFlags(t *testing.T) {
+	th := kusttest_test.MakeEnhancedHarnessWithTmpRoot(t).
+		PrepBuiltin("HelmChartInflationGenerator")
+	defer th.Reset()
+	if err := th.ErrIfNoHelm(); err != nil {
+		t.Skip("skipping: " + err.Error())
+	}
+	rm := th.LoadAndRunGenerator(`
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: inc-flags
+name: minecraft
+version: 3.1.3
+repo: https://itzg.github.io/minecraft-server-charts
+releaseName: inc-flags
+includeFlags:
+	- --set minecraftServer.difficulty hard
+	- --set minecraftServer.eula true
+	- --atomic
+	- --api-versions=networking.k8s.io/v1/Ingress
+	- --description='Kustomize Include Flags'
+`)
+	th.AssertActualEqualsExpected(
+		rm, fmt.Sprintf(expectedInflationFmt,
+			"hard", // difficulty
+		))
+}
